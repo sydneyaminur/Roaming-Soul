@@ -513,6 +513,21 @@ footer {
     padding: 2rem 0;
 }
 
+/* Social media buttons in contact section */
+.social-links { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 0.85rem; }
+.social-btn { width: 46px; height: 46px; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 14px; transition: background .35s ease, transform .35s cubic-bezier(.22,.61,.36,1), box-shadow .4s ease; position: relative; overflow: hidden; }
+.social-btn svg { width: 22px; height: 22px; fill: #fff; transition: transform .6s cubic-bezier(.22,.61,.36,1); }
+.social-btn::before { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg,var(--c1),var(--c2)); opacity: 0; transition: opacity .4s ease; }
+.social-btn:hover::before, .social-btn:focus-visible::before { opacity: 1; }
+.social-btn:hover svg, .social-btn:focus-visible svg { transform: scale(1.18); }
+.social-btn:hover { transform: translateY(-6px) rotate(-3deg); box-shadow: 0 12px 28px -8px rgba(0,0,0,.55), 0 4px 10px -2px rgba(0,0,0,.4); }
+.social-btn:active { transform: translateY(-2px) scale(.94); }
+.social-btn.fb { --c1:#1877f2; --c2:#3b5998; }
+.social-btn.ig { --c1:#f09433; --c2:#bc1888; }
+.social-btn.gh { --c1:#24292e; --c2:#57606a; }
+.social-btn.li { --c1:#0a66c2; --c2:#004182; }
+.social-btn.dc { --c1:#5865F2; --c2:#424dcf; }
+@media (max-width: 480px){ .social-links { justify-content: center; } }
 /* -------- Enhancements -------- */
 /* Smooth fade/slide reveal */
 .reveal { opacity: 0; transform: translateY(40px); transition: opacity .8s ease, transform .8s cubic-bezier(.22,.61,.36,1); }
