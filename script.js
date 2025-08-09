@@ -98,4 +98,43 @@
     const dialog = e.target.closest('.modal-dialog');
     if (!dialog && modal.classList.contains('open')) closeModal(modal);
   });
+
+  /* ===== Lottie Loader Hide Logic ===== */
+  const lottieLoader = doc.getElementById('appLoader');
+  if (lottieLoader) {
+    window.addEventListener('load', () => {
+      setTimeout(()=> { lottieLoader.classList.add('hide'); }, 400); // small delay for polish
+      setTimeout(()=> { lottieLoader.remove(); }, 1400);
+    });
+    // Fallback auto-hide after 7s if load event delayed
+    setTimeout(()=> { if(lottieLoader && !lottieLoader.classList.contains('hide')) { lottieLoader.classList.add('hide'); setTimeout(()=> lottieLoader.remove(), 1000); } }, 7000);
+  }
+
+  /* ===== Navbar style change on About section ===== */
+  const navbar = doc.querySelector('.navbar');
+  const aboutSection = doc.getElementById('about');
+  if (navbar && aboutSection) {
+    const threshold = () => aboutSection.offsetTop - 20; // trigger close to section start
+    const onScrollNav = () => {
+      if (window.scrollY >= threshold()) navbar.classList.add('white'); else navbar.classList.remove('white');
+    };
+    window.addEventListener('scroll', onScrollNav, { passive: true });
+    window.addEventListener('resize', onScrollNav);
+    onScrollNav();
+  }
+
+  /* ===== Monkey Show/Hide Password ===== */
+  const pwInput = doc.getElementById('loginPassword');
+  const monkeyBtn = pwInput ? pwInput.parentElement.querySelector('.monkey-toggle') : null;
+  if (pwInput && monkeyBtn) {
+    monkeyBtn.addEventListener('click', () => {
+      const show = pwInput.type === 'password';
+      pwInput.type = show ? 'text' : 'password';
+      monkeyBtn.setAttribute('aria-pressed', String(show));
+      monkeyBtn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+      monkeyBtn.classList.remove('jiggle');
+      void monkeyBtn.offsetWidth; // reflow for restart
+      monkeyBtn.classList.add('jiggle');
+    });
+  }
 })();
