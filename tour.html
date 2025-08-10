@@ -30,6 +30,17 @@
     .register-stats { display:flex; flex-wrap:wrap; gap:1.2rem; margin:.8rem 0 1.2rem; }
     .register-stats .stat { display:flex; flex-direction:column; font-size:.75rem; letter-spacing:.5px; font-weight:600; text-transform:uppercase; opacity:.9; }
     .register-stats .stat span { font-size:1.3rem; letter-spacing:0; font-weight:700; }
+  /* New metric boxes layout */
+  .reg-metrics { display:flex; flex-wrap:wrap; gap:1rem; margin:.9rem 0 1.3rem; }
+  .metric-box { flex:0 0 140px; width:140px; height:140px; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.28); border-radius:16px; padding:.85rem; box-shadow:0 5px 12px -6px rgba(0,0,0,.35); position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+  .metric-box:before { content:""; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.05)); mix-blend-mode:overlay; pointer-events:none; }
+  .metric-box h3 { margin:0 0 .45rem; font-size:.62rem; letter-spacing:.18em; font-weight:700; opacity:.85; text-transform:uppercase; }
+  .metric-box .value { font-size:1.6rem; font-weight:700; line-height:1; letter-spacing:.5px; }
+  .metric-box.target { background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.08)); }
+  .metric-box.registered { background:linear-gradient(135deg,rgba(255,255,255,.2),rgba(255,255,255,.1)); }
+  .metric-box.available { background:linear-gradient(135deg,rgba(34,197,94,.35),rgba(16,185,129,.25)); }
+  @media (max-width:620px){ .metric-box { flex:1 1 calc(50% - .5rem); width:auto; height:130px; } }
+  @media (max-width:480px){ .metric-box { flex:1 1 100%; width:100%; height:125px; } }
     .progress-wrap { background:rgba(255,255,255,.25); height:10px; border-radius:6px; overflow:hidden; margin:.6rem 0 1rem; }
     .progress-bar { height:100%; width:0; background:linear-gradient(90deg,#fff,#c3dafe); transition:width 1.2s cubic-bezier(.77,0,.18,1); }
     .register-box button { background:#fff; color:#1d4ed8; border:none; padding:.85rem 1.1rem; border-radius:12px; font-weight:600; cursor:pointer; box-shadow:0 6px 18px -6px rgba(0,0,0,.25); font-size:.9rem; transition:transform .3s ease, box-shadow .4s ease; }
@@ -81,18 +92,18 @@
         <p id="tourDesc" class="dynamic-desc"></p>
         <div class="tour-meta" id="tourMeta"></div>
   <h2 style="font-size:1.3rem;margin:0 0 .6rem;" id="exploreHeading">What We Are Going To Explore</h2>
-  <p id="exploreIntro" style="font-size:.85rem;margin:0 0 1.1rem;color:#475569;letter-spacing:.3px;"></p>
+  <!-- Removed exploreIntro line per request -->
   <ul class="plan-list" id="planList"></ul>
   <div class="register-box" id="registerBox" aria-live="polite">
           <h2>Registration Status</h2>
-          <div class="register-stats">
-            <div class="stat"><span id="regCount">0</span> Registered</div>
-            <div class="stat"><span id="regTarget">0</span> Target</div>
-            <div class="stat"><span id="daysLeft">0</span> Days Left</div>
+          <div class="reg-metrics">
+            <div class="metric-box target" aria-label="Target participants"><h3>Target</h3><span class="value" id="regTarget">0</span></div>
+            <div class="metric-box registered" aria-label="Registered participants"><h3>Registered</h3><span class="value" id="regCount">0</span></div>
+            <div class="metric-box available" aria-label="Available spots"><h3>Available</h3><span class="value" id="regAvailable">0</span></div>
           </div>
           <div class="progress-wrap"><div class="progress-bar" id="regProgress"></div></div>
           <p id="regMessage" style="font-size:.8rem; margin:.2rem 0 .9rem; letter-spacing:.3px; opacity:.9;"></p>
-          <button type="button" id="registerBtn">Register Interest</button>
+          <button type="button" id="registerBtn">Join Now</button>
         </div>
         <a class="back-link" href="index.html#adventures">← Back to all tours</a>
       </div>
@@ -129,14 +140,14 @@
           focus: 'Beach / Culture',
           season: 'Ideal: Nov – Mar',
           itinerary: [
-            { day:1, title:'Arrival & Sunset', text:'after a long day of travel, we will relax and enjoy a sunset dinner by the beach.' },
+            { day:1, title:'Arrival & Sunset', text:'after a long day of travel, we will relax on the hotel at night.' },
             { day:2, title:'Beach & Himchari', text:'Sunrise walk, beach chill, visit Himchari National Park & waterfall, evening local bazaar.' },
-            { day:3, title:'Inani & Activities', text:'Trip to Inani Beach, rock pools, optional surfing / ATV / beach cleanup & group bonfire.' },
+            { day:3, title:'Inani & Activities', text:'Trip to Inani Beach, rock pools, optional surfing / ATV / beach cleanup.' },
             { day:4, title:'Free Morning & Return', text:'Optional sunrise, souvenir shopping, return journey after lunch.' }
           ],
           media:[ 'essentials/Coxs Bazar.jpg' ],
-          registered: 9,
-          target: 15,
+          registered: 20,
+          target: 50,
           startDate: addDays(18)
         },
         'sundarbans': {
@@ -219,9 +230,9 @@
   const planList = document.getElementById('planList');
   const heroEl = document.querySelector('.tour-hero');
       const regCountEl = document.getElementById('regCount');
-      const regTargetEl = document.getElementById('regTarget');
-      const daysLeftEl = document.getElementById('daysLeft');
-      const regProgress = document.getElementById('regProgress');
+  const regTargetEl = document.getElementById('regTarget');
+  const regProgress = document.getElementById('regProgress');
+  const regAvailableEl = document.getElementById('regAvailable');
       const regMessage = document.getElementById('regMessage');
       const registerBtn = document.getElementById('registerBtn');
 
@@ -240,11 +251,7 @@
       descEl.textContent = data.desc;
       crumb.textContent = data.title;
 
-      // Exploration intro text
-      const exploreIntro = document.getElementById('exploreIntro');
-      if(exploreIntro){
-        exploreIntro.textContent = 'Below is what we are going to do there:';
-      }
+  // exploreIntro removed per request
 
       // Force Cox's Bazar image as background (requested) regardless of tour
       if (heroEl) {
@@ -257,9 +264,9 @@
       metaEl.innerHTML = '';
       const metaItems = [
         ['DURATION', data.durationLabel],
-        ['DIFFICULTY', data.difficulty],
+
         ['FOCUS', data.focus],
-        ['SEASON', data.season]
+  ['DATE', '15th December 2025']
       ];
       metaItems.forEach((m,i)=>{
         const chip=document.createElement('div');
@@ -314,28 +321,30 @@
   // (Local highlights section removed)
 
       // Registration info simulation
-      const now = new Date();
-      const diffDays = Math.max(0, Math.ceil((data.startDate - now)/(1000*60*60*24)));
+  // Days left removed per request
       regCountEl.textContent = data.registered;
       regTargetEl.textContent = data.target;
-      daysLeftEl.textContent = diffDays;
+  regAvailableEl.textContent = Math.max(0, data.target - data.registered);
       const pct = Math.min(100, Math.round((data.registered/data.target)*100));
       requestAnimationFrame(()=> regProgress.style.width = pct + '%');
       regMessage.textContent = pct >= 100 ? 'Registration full – waitlist only.' : `${pct}% of spots filled. ${data.target - data.registered} spots left.`;
 
-      registerBtn.addEventListener('click', ()=>{
-        if(regProgress.dataset.locked) return;
-        let current = parseInt(regCountEl.textContent,10);
-        if(current >= data.target){
-          regMessage.textContent = 'Already full. You are on the waitlist.';
-          regProgress.dataset.locked = '1';
-          return;
+      // Include locally stored extra registrations (from join page)
+      try {
+        const extra = JSON.parse(localStorage.getItem('tourExtraRegistrations')||'{}');
+        if(extra[key]){
+          data.registered += extra[key];
+          regCountEl.textContent = data.registered;
+          const pct2 = Math.min(100, Math.round((data.registered/data.target)*100));
+          regProgress.style.width = pct2 + '%';
+          const remaining2 = Math.max(0, data.target - data.registered);
+          regAvailableEl.textContent = remaining2;
+          regMessage.textContent = pct2 >= 100 ? 'Registration full – waitlist only.' : `${pct2}% of spots filled. ${remaining2} spots left.`;
         }
-        current += 1; data.registered = current; regCountEl.textContent = current;
-        const newPct = Math.min(100, Math.round((current/data.target)*100));
-        regProgress.style.width = newPct + '%';
-        regMessage.textContent = newPct >= 100 ? 'Registration full – waitlist only.' : `${newPct}% of spots filled. ${data.target - current} spots left.`;
-        if(newPct >= 100){ regProgress.dataset.locked='1'; registerBtn.disabled=true; registerBtn.textContent='Full'; }
+      } catch(e) {}
+
+      registerBtn.addEventListener('click', ()=>{
+  location.href = 'registration.html?tour='+encodeURIComponent(key||'coxs-bazar');
       });
     })();
   </script>
