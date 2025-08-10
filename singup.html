@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Create Account • Roaming Soul</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="signup-page">
+  <div class="signup-bg-video" aria-hidden="true">
+    <video class="signup-bg-video-media" autoplay muted loop playsinline>
+      <source src="essentials/background.mp4" type="video/mp4" />
+    </video>
+    <div class="signup-bg-overlay"></div>
+  </div>
+  <nav class="navbar white" style="position:fixed;top:0;left:0;right:0;">
+    <a href="index.html" class="logo" aria-label="Roaming Soul Home" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:.4rem;">
+      <img src="essentials/Logo.png" alt="Roaming Soul Logo" />
+      <span class="logo-text" style="color:#1f2933;text-shadow:none;">Roaming Soul</span>
+    </a>
+  </nav>
+  <div class="signup-wrapper">
+  <h1 class="signup-title">Create Account</h1>
+    <p class="lead">Join Roaming Soul for upcoming adventures.</p>
+    <form id="signupForm" novalidate>
+      <label class="field" id="field-name"><span>Full Name</span><input type="text" id="name" minlength="3" required placeholder="Enter your full name"><div class="error-msg" data-for="name"></div></label>
+      <label class="field" id="field-email"><span>Email</span><input type="email" id="email" required placeholder="you@example.com"><div class="error-msg" data-for="email"></div></label>
+      <label class="field" id="field-pass"><span>Password</span><input type="password" id="password" minlength="6" required placeholder="Minimum 6 characters"><div class="error-msg" data-for="password"></div></label>
+      <label class="field" id="field-pass2"><span>Confirm Password</span><input type="password" id="password2" minlength="6" required placeholder="Re-type password"><div class="error-msg" data-for="password2"></div></label>
+      <div class="gender-wrapper" id="field-gender">
+        <span style="display:block;font-size:.72rem;font-weight:600;letter-spacing:.12em;color:#334155;margin:.3rem 0 .35rem;">Gender</span>
+        <div class="gender-group" role="group" aria-label="Choose gender">
+          <button type="button" class="gbtn" data-gender="Male">Male</button>
+          <button type="button" class="gbtn" data-gender="Female">Female</button>
+          <button type="button" class="gbtn" data-gender="Other">Other</button>
+        </div>
+        <div class="gender-error">Select a gender option.</div>
+      </div>
+      <button type="submit">Sign Up</button>
+      <div class="switch">Already have an account? <a href="#" id="toLogin">Login</a></div>
+    </form>
+    <a class="back-link" href="index.html#home">← Back Home</a>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

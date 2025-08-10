@@ -132,9 +132,11 @@
       pwInput.type = show ? 'text' : 'password';
       monkeyBtn.setAttribute('aria-pressed', String(show));
       monkeyBtn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
-      monkeyBtn.classList.remove('jiggle');
-      void monkeyBtn.offsetWidth; // reflow for restart
-      monkeyBtn.classList.add('jiggle');
+      if(monkeyBtn.classList.contains('emoji')) {
+        monkeyBtn.textContent = show ? '🙈' : '🐵';
+      } else {
+        monkeyBtn.classList.remove('jiggle'); void monkeyBtn.offsetWidth; monkeyBtn.classList.add('jiggle');
+      }
     });
   }
 
@@ -282,4 +284,33 @@
       const backLink=document.getElementById('backLink'); if(backLink){ backLink.addEventListener('click', e=>{ const href=backLink.getAttribute('href'); if(href && !href.startsWith('#')){ e.preventDefault(); showLoaderAndNavigate(href); } }); }
     }
   }
+})();
+
+// ===== Signup Page Logic (migrated from inline script) =====
+(function(){
+  if(!document.body.classList.contains('signup-page')) return;
+  const form=document.getElementById('signupForm');
+  if(!form) return;
+  let selectedGender="";
+  const genderWrapper=document.getElementById('field-gender');
+  const genderButtons=[...genderWrapper.querySelectorAll('.gbtn')];
+  genderButtons.forEach(btn=>btn.addEventListener('click',()=>{
+    genderButtons.forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedGender=btn.getAttribute('data-gender');
+    genderWrapper.classList.remove('invalid');
+    genderWrapper.querySelector('.gender-error').style.display='none';
+  }));
+  const fields={
+    name:{el:document.getElementById('name'),rule:v=>v.trim().length>=3||'Name must be at least 3 characters'},
+    email:{el:document.getElementById('email'),rule:v=>(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/).test(v.trim())||'Enter a valid email'},
+    password:{el:document.getElementById('password'),rule:v=>v.length>=6||'Password must be ≥ 6 chars'},
+    password2:{el:document.getElementById('password2'),rule:v=>v===fields.password.el.value||'Passwords do not match'}
+  };
+  function showError(k,msg){const mapId=k==='password'? 'pass': (k==='password2'?'pass2':k); const wrap=document.getElementById('field-'+mapId);if(!wrap) return;const box=wrap.querySelector('.error-msg');if(!box) return; if(msg===true){wrap.classList.remove('invalid');box.style.display='none';box.textContent='';return;}wrap.classList.add('invalid');box.textContent=msg;box.style.display='block';}
+  const touched={};
+  function validate(k,force){const {el,rule}=fields[k];const res=rule(el.value); if(touched[k]||force) showError(k,res===true?true:res); return res===true;}
+  Object.keys(fields).forEach(k=>{fields[k].el.addEventListener('input',()=>{ if(!touched[k]) touched[k]=true; validate(k); if(k==='password'&&touched.password2) validate('password2',true); }); fields[k].el.addEventListener('blur',()=>{touched[k]=true; validate(k,true); if(k==='password') validate('password2',true);});});
+  form.addEventListener('submit',e=>{e.preventDefault();let ok=true;Object.keys(fields).forEach(k=>{touched[k]=true;if(!validate(k,true)) ok=false;}); if(!selectedGender){ genderWrapper.classList.add('invalid'); genderWrapper.querySelector('.gender-error').style.display='block'; ok=false; } if(!ok) return; try{const users=JSON.parse(localStorage.getItem('rsUsers')||'[]');users.push({n:fields.name.el.value.trim(),e:fields.email.el.value.trim(),p:fields.password.el.value,g:selectedGender});localStorage.setItem('rsUsers',JSON.stringify(users));alert('Account created! You can login now.');location.href='index.html#login';}catch(err){alert('Could not save account locally.');}});
+  const toLogin=document.getElementById('toLogin'); if(toLogin){ toLogin.addEventListener('click',e=>{e.preventDefault();location.href='index.html#login';}); }
 })();
