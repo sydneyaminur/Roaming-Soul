@@ -91,7 +91,14 @@
       const params=new URLSearchParams(location.search); const tour=params.get('tour');
       const heading=document.getElementById('joinHeading');
       const lead=document.getElementById('joinLead');
-      if(tour){ heading.textContent='Join '+ formatTitle(tour) + ' Tour'; lead.textContent='Tell us how many people are joining the '+ formatTitle(tour) +' adventure.'; document.getElementById('backLink').href='tour.html?tour='+tour; }
+      if(tour){
+        heading.textContent='Join '+ formatTitle(tour) + ' Tour';
+        lead.textContent='Tell us how many people are joining the '+ formatTitle(tour) +' adventure.';
+        const backLink=document.getElementById('backLink');
+  if(tour==='sundarbans') backLink.href='shundarban.html';
+  else if(tour==='bandarban') backLink.href='bandarban.html';
+  else backLink.href='coxs-bazar.html?tour='+tour;
+      }
       function formatTitle(k){ return k.replace(/-/g,' ').replace(/\b\w/g,ch=>ch.toUpperCase()); }
       const form=document.getElementById('joinForm'); const success=document.getElementById('successMsg');
       const liveErrors=document.getElementById('liveErrors');
@@ -154,7 +161,11 @@
         submitBtn.disabled=true;
         // Brief success message then show loader and navigate
         setTimeout(()=>{
-          showLoaderAndNavigate('tour.html?tour='+encodeURIComponent(tour||'coxs-bazar')+'&joined='+count, 550);
+          let next;
+          if(tour==='sundarbans') next='shundarban.html?joined='+count;
+          else if(tour==='bandarban') next='bandarban.html?joined='+count;
+          else next='coxs-bazar.html?tour='+encodeURIComponent(tour||'coxs-bazar')+'&joined='+count;
+          showLoaderAndNavigate(next, 550);
         }, 650);
       });
       // Back link intercept to show loader

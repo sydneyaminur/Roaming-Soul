@@ -169,21 +169,6 @@
           media:[ 'essentials/Shundarban.jpg' ],
           registered: 6, target: 12, startDate: addDays(30)
         },
-        'bandarban': {
-          title: 'Bandarban Highland Trek',
-          short: 'Hilltop sunrises, indigenous culture & misty trails.',
-          desc: 'We will trek selected hill trails, visit remote villages, taste traditional foods, and capture sunrise panoramas across the green waves of Bandarban.',
-          days: 4,
-            durationLabel: '4 Days',
-          difficulty: 'Moderate Trek', focus: 'Mountains / Culture', season:'Oct – Mar',
-          itinerary:[
-            { day:1, title:'Arrival & Viewpoint', text:'Milanchari viewpoint and local dinner.' },
-            { day:2, title:'Trail & Villages', text:'Guided trek, indigenous village visit, cultural interaction.' },
-            { day:3, title:'Sunrise & Waterfall', text:'Early sunrise hill, waterfall exploration, rest afternoon.' },
-            { day:4, title:'Local Market & Return', text:'Morning market walk and departure.' }
-          ],
-          media:['essentials/Bandarban Hills.jpg'], registered:5, target:14, startDate:addDays(25)
-        },
         'sylhet-tea': {
           title: 'Sylhet Tea & Mystic Valleys', short:'Emerald tea gardens, rivers & spiritual sites.',
           desc:'A relaxing journey through rolling tea estates, Lalakhal river trip, Ratargul swamp forest (if water levels permit) and local cuisine in Sylhet.',
@@ -221,6 +206,8 @@
 
       const params = new URLSearchParams(window.location.search);
       const key = params.get('tour');
+    // If someone arrives here with an old Bandarban tour query, redirect to new static page
+    if (key === 'bandarban') { location.replace('bandarban.html'); return; }
       const data = tourData[key];
       const titleEl = document.getElementById('tourTitle');
       const introEl = document.getElementById('tourIntro');
