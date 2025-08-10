@@ -12,8 +12,8 @@
     p.lead{margin:-.4rem 0 1.6rem;font-size:.95rem;color:#475569;text-align:center;}
     form{display:flex;flex-direction:column;gap:1.1rem;}
     label span{display:block;font-size:.75rem;font-weight:600;letter-spacing:.12em;color:#334155;margin-bottom:.4rem;}
-    input,textarea{width:100%;padding:.85rem 1rem;border:1px solid #cfd6dd;border-radius:14px;font:inherit;background:#f8fafc;transition:border-color .3s ease,background .3s ease,box-shadow .3s ease;}
-    input:focus,textarea:focus{outline:none;border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.25);} 
+  input,textarea,select{width:100%;padding:.85rem 1rem;border:1px solid #cfd6dd;border-radius:14px;font:inherit;background:#f8fafc;transition:border-color .3s ease,background .3s ease,box-shadow .3s ease;}
+  input:focus,textarea:focus,select:focus{outline:none;border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.25);} 
     .two{display:grid;grid-template-columns:1fr 1fr;gap:1rem;} 
     @media(max-width:560px){.two{grid-template-columns:1fr;}}
     .note{font-size:.7rem;color:#64748b;margin-top:-.6rem;letter-spacing:.4px;}
@@ -23,8 +23,9 @@
     .success{display:none;padding:1rem 1.1rem;margin-top:1.2rem;border-radius:14px;background:#ecfdf5;color:#065f46;font-size:.85rem;font-weight:600;}
   .field{position:relative;}
   .error-msg{display:none;font-size:.65rem;font-weight:600;letter-spacing:.5px;color:#b91c1c;margin-top:.35rem;background:#fef2f2;padding:.4rem .55rem;border:1px solid #fecaca;border-radius:10px;}
-  .invalid input{border-color:#dc2626;background:#fef2f2;}
-  .invalid input:focus{box-shadow:0 0 0 3px rgba(220,38,38,.25);}
+  .invalid input,.invalid select{border-color:#dc2626;background:#fef2f2;}
+  .invalid input:focus,.invalid select:focus{box-shadow:0 0 0 3px rgba(220,38,38,.25);}
+  /* (Gender radio style removed – reverted to select) */
   .aria-status{position:absolute;left:-9999px;height:1px;width:1px;overflow:hidden;clip:rect(0 0 0 0);}
   button[disabled]{opacity:.55;cursor:not-allowed;}
   </style>
@@ -58,7 +59,18 @@
         <label class="field" id="field-phone"><span>Phone</span><input type="tel" id="phone" required placeholder="11 digit phone" autocomplete="tel" pattern="^\d{11}$"><div class="error-msg" data-for="phone"></div></label>
   <label class="field" id="field-party"><span>Number of people (if anyone is going with you)</span><input type="number" id="party" min="0" step="1" placeholder="Leave blank = going alone" ><div class="error-msg" data-for="party"></div></label>
       </div>
-      <label class="field" id="field-notes"><span>Additional Notes (optional)</span><textarea id="notes" rows="3" placeholder="Anything we should know?"></textarea></label>
+      <div class="two">
+        <label class="field" id="field-gender"><span>Gender</span>
+          <select id="gender" required>
+            <option value="">Select...</option>
+            <option value="Male">Male ♂️</option>
+            <option value="Female">Female ♀️</option>
+            <option value="Other">Other ⚧️</option>
+          </select>
+          <div class="error-msg" data-for="gender"></div>
+        </label>
+        <label class="field" id="field-notes"><span>Additional Notes (optional)</span><textarea id="notes" rows="3" placeholder="Anything we should know?"></textarea></label>
+      </div>
   <p class="note">Rules: Name ≥ 3 letters · Email valid · Phone = 11 digits · Field counts companions only (blank = going alone).</p>
       <button type="submit">Confirm & Join</button>
       <div class="success" id="successMsg" role="status" aria-live="polite">Saved! Redirecting back to tour...</div>
@@ -103,10 +115,11 @@
       const form=document.getElementById('joinForm'); const success=document.getElementById('successMsg');
       const liveErrors=document.getElementById('liveErrors');
       const fields={
-        name:{el:document.getElementById('name'),rule(v){return v.trim().length>=3||'Name must be at least 3 characters';}},
+    name:{el:document.getElementById('name'),rule(v){return v.trim().length>=3||'Name must be at least 3 characters';}},
         email:{el:document.getElementById('email'),rule(v){return (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/).test(v.trim())||'Enter a valid email address';}},
         phone:{el:document.getElementById('phone'),rule(v){return (/^\d{11}$/).test(v.trim())||'Phone must be exactly 11 digits';}},
-  party:{el:document.getElementById('party'),rule(v){if(v==="") return true; const n=Number(v); return (n>=0 && n<1001)||'Value must be 0 - 1000';}}
+  party:{el:document.getElementById('party'),rule(v){if(v==="") return true; const n=Number(v); return (n>=0 && n<1001)||'Value must be 0 - 1000';}},
+  gender:{el:document.getElementById('gender'),rule(v){return v.trim()!==''||'Select a gender';}}
       };
       function showError(key,msg){
         const wrapper=document.getElementById('field-'+key);
@@ -130,7 +143,7 @@
       });
       const submitBtn=form.querySelector('button[type=submit]');
       function updateSubmit(){
-        const allValid=['name','email','phone','party'].every(k=>fields[k].rule(fields[k].el.value)===true);
+  const allValid=['name','email','phone','party','gender'].every(k=>fields[k].rule(fields[k].el.value)===true);
         submitBtn.disabled=!allValid;
       }
       updateSubmit();
