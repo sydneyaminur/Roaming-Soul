@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tour Plan • Roaming Soul</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { background:#f5f7fa; }
+    .tour-hero { position:relative; min-height:46vh; display:grid; place-items:center; padding:4rem 1rem; background:linear-gradient(135deg,#0f172a,#1e3a8a); color:#fff; text-align:center; overflow:hidden; }
+  /* Ensure consistent title & intro color across loading screens */
+  #tourTitle, #tourIntro { color:#ffffff; }
+    .tour-hero h1 { font-size:clamp(2.2rem,6vw,3.3rem); letter-spacing:.5px; margin:0 0 .8rem; }
+    .tour-hero p { max-width:760px; margin:0 auto; font-size:clamp(1rem,2.4vw,1.2rem); line-height:1.5; }
+    .tour-container { max-width:1100px; margin:-3rem auto 4rem; padding:0 1.2rem; position:relative; }
+    .tour-panel { background:#fff; border-radius:22px; padding:2.2rem 2rem 2.6rem; box-shadow:0 14px 45px -14px rgba(0,0,0,.28),0 6px 18px -8px rgba(0,0,0,.18); }
+    .breadcrumbs { font-size:.78rem; text-transform:uppercase; letter-spacing:.12em; font-weight:600; margin-bottom:1.4rem; color:#475569; display:flex; gap:.5rem; flex-wrap:wrap; }
+    .breadcrumbs a { text-decoration:none; color:#2563eb; }
+    .tour-meta { display:flex; flex-wrap:wrap; gap:1.1rem; margin:1.4rem 0 2rem; }
+    .tour-meta .chip { background:#f1f5f9; border:1px solid #e2e8f0; padding:.55rem .9rem; border-radius:30px; font-size:.72rem; font-weight:600; letter-spacing:.5px; display:inline-flex; align-items:center; gap:.45rem; }
+    .tour-meta .chip.primary { background:linear-gradient(135deg,#2563eb,#1d4ed8); color:#fff; border:none; box-shadow:0 6px 16px -6px rgba(37,99,235,.55); }
+  /* Reworked single-column list style for itinerary & activities */
+  .plan-list { list-style:none; margin:.5rem 0 1.6rem; padding:0; display:flex; flex-direction:column; gap:.7rem; }
+  .plan-list li { background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:.85rem 1rem .95rem; box-shadow:0 4px 10px -6px rgba(0,0,0,.12); }
+  .plan-list li h3 { margin:0 0 .25rem; font-size:.95rem; color:#1e293b; letter-spacing:.2px; }
+  .plan-list li p { margin:0; font-size:.78rem; line-height:1.45; color:#475569; }
+    .dynamic-desc { font-size:.95rem; line-height:1.6; color:#334155; margin:0 0 1.4rem; }
+    .register-box { background:linear-gradient(135deg,#1d4ed8,#2563eb); color:#fff; padding:1.5rem 1.4rem 1.6rem; border-radius:20px; position:relative; overflow:hidden; box-shadow:0 10px 28px -12px rgba(37,99,235,.6); }
+    .register-box h2 { margin:0 0 .6rem; font-size:1.4rem; }
+    .register-stats { display:flex; flex-wrap:wrap; gap:1.2rem; margin:.8rem 0 1.2rem; }
+    .register-stats .stat { display:flex; flex-direction:column; font-size:.75rem; letter-spacing:.5px; font-weight:600; text-transform:uppercase; opacity:.9; }
+    .register-stats .stat span { font-size:1.3rem; letter-spacing:0; font-weight:700; }
+    .progress-wrap { background:rgba(255,255,255,.25); height:10px; border-radius:6px; overflow:hidden; margin:.6rem 0 1rem; }
+    .progress-bar { height:100%; width:0; background:linear-gradient(90deg,#fff,#c3dafe); transition:width 1.2s cubic-bezier(.77,0,.18,1); }
+    .register-box button { background:#fff; color:#1d4ed8; border:none; padding:.85rem 1.1rem; border-radius:12px; font-weight:600; cursor:pointer; box-shadow:0 6px 18px -6px rgba(0,0,0,.25); font-size:.9rem; transition:transform .3s ease, box-shadow .4s ease; }
+    .register-box button:hover { transform:translateY(-3px); box-shadow:0 14px 32px -12px rgba(0,0,0,.35); }
+    .tour-gallery { margin:2.8rem 0 1rem; }
+    .tour-gallery h2 { font-size:1.5rem; margin:0 0 1rem; color:#1e293b; }
+    .thumbs { display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); }
+    .thumbs img { width:100%; height:140px; object-fit:cover; border-radius:14px; border:2px solid #fff; box-shadow:0 6px 18px -8px rgba(0,0,0,.25); transition:transform .4s ease; }
+    .thumbs img:hover { transform:translateY(-4px); }
+    .empty-msg { font-size:.85rem; color:#64748b; }
+    .back-link { display:inline-flex; align-items:center; gap:.45rem; font-size:.8rem; text-decoration:none; background:#fff; padding:.6rem .9rem; border-radius:12px; border:1px solid #e2e8f0; margin-top:1.4rem; box-shadow:0 4px 8px -4px rgba(0,0,0,.18); }
+    .back-link:hover { background:#f1f5f9; }
+    @media (max-width:760px){ .tour-meta { gap:.7rem; } .plan-grid { gap:1.4rem; } .tour-panel { padding:1.8rem 1.2rem 2.2rem; } }
+    @media (prefers-reduced-motion:reduce){ .progress-bar { transition:none; } }
+  </style>
+</head>
+<body>
+  <!-- Lottie Loading Screen (same as index) -->
+  <div id="appLoader" class="lottie-loader" role="status" aria-live="polite" aria-label="Loading site">
+    <dotlottie-wc src="https://lottie.host/2d14eb0f-28b0-4d21-ac17-9a12f9404d3b/DEKcVcQZ2y.lottie" speed="1" autoplay loop></dotlottie-wc>
+    <p class="loader-tip">Loading...</p>
+    <noscript><p class="loader-tip">Please enable JavaScript to use this site.</p></noscript>
+  </div>
+  <header>
+    <nav class="navbar white">
+      <a href="index.html" class="logo" aria-label="Roaming Soul Home" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:.4rem;">
+        <img src="essentials/Logo.png" alt="Roaming Soul Logo" />
+        <span class="logo-text">Roaming Soul</span>
+      </a>
+      <ul class="nav-menu">
+        <li><a href="index.html#home" class="nav-link">Home</a></li>
+        <li><a href="index.html#adventures" class="nav-link">Adventures</a></li>
+        <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main style="padding-top:90px;">
+    <section class="tour-hero">
+      <div>
+        <h1 id="tourTitle">Loading Tour...</h1>
+        <p id="tourIntro">Bringing itinerary details. Please wait.</p>
+      </div>
+    </section>
+    <div class="tour-container">
+      <div class="tour-panel">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <a href="index.html">Home</a> › <a href="index.html#adventures">Recent Tour Planning</a> › <span id="crumbActive">Loading</span>
+        </nav>
+        <p id="tourDesc" class="dynamic-desc"></p>
+        <div class="tour-meta" id="tourMeta"></div>
+  <h2 style="font-size:1.3rem;margin:0 0 .6rem;" id="exploreHeading">What We Are Going To Explore</h2>
+  <p id="exploreIntro" style="font-size:.85rem;margin:0 0 1.1rem;color:#475569;letter-spacing:.3px;"></p>
+  <ul class="plan-list" id="planList"></ul>
+  <div class="register-box" id="registerBox" aria-live="polite">
+          <h2>Registration Status</h2>
+          <div class="register-stats">
+            <div class="stat"><span id="regCount">0</span> Registered</div>
+            <div class="stat"><span id="regTarget">0</span> Target</div>
+            <div class="stat"><span id="daysLeft">0</span> Days Left</div>
+          </div>
+          <div class="progress-wrap"><div class="progress-bar" id="regProgress"></div></div>
+          <p id="regMessage" style="font-size:.8rem; margin:.2rem 0 .9rem; letter-spacing:.3px; opacity:.9;"></p>
+          <button type="button" id="registerBtn">Register Interest</button>
+        </div>
+        <a class="back-link" href="index.html#adventures">← Back to all tours</a>
+      </div>
+    </div>
+  </main>
+  <footer style="background:#222;color:#fff;text-align:center;padding:2rem 0;">
+    <p style="margin:0;">© 2025 Roaming Soul. All rights reserved.</p>
+  </footer>
+  <!-- Lottie web component script -->
+  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
+  <script>
+    // Loader hide logic (mirrors index page behavior)
+    (function(){
+      const lottieLoader = document.getElementById('appLoader');
+      if(lottieLoader){
+        window.addEventListener('load', ()=>{
+          setTimeout(()=> lottieLoader.classList.add('hide'), 400);
+          setTimeout(()=> lottieLoader.remove(), 1400);
+        });
+        setTimeout(()=>{ if(lottieLoader && !lottieLoader.classList.contains('hide')) { lottieLoader.classList.add('hide'); setTimeout(()=>lottieLoader.remove(),1000); } },7000);
+      }
+    })();
+  </script>
+  <script>
+    (function(){
+      const tourData = {
+        'coxs-bazar': {
+          title: "Cox's Bazar Expedition",
+          short: "Golden sands, sunrise walks, seafood feasts & marine discovery.",
+          desc: "For an optimal experience, plan your trip to Cox's Bazar in early December. The weather is cool and dry, offering perfect conditions for beach activities and sightseeing.",
+          days: 4,
+          durationLabel: '4 Days / 3 Nights',
+          difficulty: 'Easy Leisure',
+          focus: 'Beach / Culture',
+          season: 'Ideal: Nov – Mar',
+          itinerary: [
+            { day:1, title:'Arrival & Sunset', text:'Depart Dhaka overnight or early morning, settle in, lighthouse point sunset, seafood dinner.' },
+            { day:2, title:'Beach & Himchari', text:'Sunrise walk, beach chill, visit Himchari National Park & waterfall, evening local bazaar.' },
+            { day:3, title:'Inani & Activities', text:'Trip to Inani Beach, rock pools, optional surfing / ATV / beach cleanup & group bonfire.' },
+            { day:4, title:'Free Morning & Return', text:'Optional sunrise, souvenir shopping, return journey after lunch.' }
+          ],
+          media:[ 'essentials/Coxs Bazar.jpg' ],
+          registered: 9,
+          target: 15,
+          startDate: addDays(18)
+        },
+        'sundarbans': {
+          title: 'Sundarbans Eco Voyage',
+          short: 'Mangrove mysteries, river cruising & wildlife tracking.',
+          desc: 'A responsible exploration of the Sundarbans focusing on biodiversity, silent channel cruising, and local conservation stories. Tiger tracks, bird calls & misty dawns.',
+          days: 5,
+          durationLabel: '5 Days',
+          difficulty: 'Moderate',
+          focus: 'Wildlife / Ecology',
+          season: 'Nov – Feb',
+          itinerary: [
+            { day:1, title:'Khulna Boarding', text:'Night launch boarding, briefing & orientation.' },
+            { day:2, title:'Canal Cruise', text:'Early canal ride, mangrove interpretation, village interaction.' },
+            { day:3, title:'Tiger Watch Zones', text:'Watch towers, track interpretation, eco education session.' },
+            { day:4, title:'Bird & Dolphin Sight', text:'Creek exploration, dolphin spotting stretch, community crafts.' },
+            { day:5, title:'Return & Debrief', text:'Morning short cruise, return to Khulna, bus back.' }
+          ],
+          media:[ 'essentials/Shundarban.jpg' ],
+          registered: 6, target: 12, startDate: addDays(30)
+        },
+        'bandarban': {
+          title: 'Bandarban Highland Trek',
+          short: 'Hilltop sunrises, indigenous culture & misty trails.',
+          desc: 'We will trek selected hill trails, visit remote villages, taste traditional foods, and capture sunrise panoramas across the green waves of Bandarban.',
+          days: 4,
+            durationLabel: '4 Days',
+          difficulty: 'Moderate Trek', focus: 'Mountains / Culture', season:'Oct – Mar',
+          itinerary:[
+            { day:1, title:'Arrival & Viewpoint', text:'Milanchari viewpoint and local dinner.' },
+            { day:2, title:'Trail & Villages', text:'Guided trek, indigenous village visit, cultural interaction.' },
+            { day:3, title:'Sunrise & Waterfall', text:'Early sunrise hill, waterfall exploration, rest afternoon.' },
+            { day:4, title:'Local Market & Return', text:'Morning market walk and departure.' }
+          ],
+          media:['essentials/Bandarban Hills.jpg'], registered:5, target:14, startDate:addDays(25)
+        },
+        'sylhet-tea': {
+          title: 'Sylhet Tea & Mystic Valleys', short:'Emerald tea gardens, rivers & spiritual sites.',
+          desc:'A relaxing journey through rolling tea estates, Lalakhal river trip, Ratargul swamp forest (if water levels permit) and local cuisine in Sylhet.',
+          days:3, durationLabel:'3 Days', difficulty:'Easy Leisure', focus:'Nature / Culture', season:'Sept – Mar',
+          itinerary:[
+            { day:1, title:'Tea Estate Immersion', text:'Arrive, estate walk, tea processing insight.' },
+            { day:2, title:'River & Swamp', text:'Lalakhal boat ride + optional Ratargul visit.' },
+            { day:3, title:'Shrines & Return', text:'Visit Hazrat Shah Jalal shrine & souvenir time.' }
+          ], media:['essentials/Sylhet Tea Gardens.jpg'], registered:7, target:16, startDate:addDays(20)
+        },
+        'rangamati': {
+          title:'Rangamati Lake Retreat', short:'Serene waters, tribal craft & lakeside sunsets.',
+          desc:'Scenic boat rides across Kaptai Lake, local weaving centers, hanging bridge and quiet shoreline sunsets define this calm retreat.',
+          days:3, durationLabel:'3 Days', difficulty:'Easy', focus:'Lake / Culture', season:'Oct – Mar',
+          itinerary:[
+            { day:1, title:'Boat & Bridge', text:'Arrival, hanging bridge, evening lake cruise.' },
+            { day:2, title:'Craft & Village', text:'Handicraft center and tribal village lunch.' },
+            { day:3, title:'Morning Calm & Return', text:'Sunrise still water reflection & depart.' }
+          ], media:['essentials/Rangamati Lake.jpg'], registered:4, target:12, startDate:addDays(22)
+        },
+        'saint-martins': {
+          title:"Saint Martin's Coral Escape", short:'Crystal water, coral ecology & starlit nights.',
+          desc:'Coral island exploration with eco briefings, sandbank walks, star gazing & sunrise coral tide pools (responsible viewing).',
+          days:4, durationLabel:'4 Days', difficulty:'Easy', focus:'Island / Marine', season:'Nov – Feb',
+          itinerary:[
+            { day:1, title:'Transit & Arrival', text:'Ship transit, beach sunset acclimation.' },
+            { day:2, title:'Coral Flats & Ecology', text:'Guided coral ecology walk, beach cleanup.' },
+            { day:3, title:'Sandbank & Night Sky', text:'Sandbank walk + night star session.' },
+            { day:4, title:'Shell Dawn & Return', text:'Sunrise shell patterns & departure.' }
+          ], media:["essentials/Saint Martin's Island.jpg"], registered:10, target:18, startDate:addDays(35)
+        }
+      };
+
+      function addDays(d){ const dt=new Date(); dt.setDate(dt.getDate()+d); return dt; }
+
+      const params = new URLSearchParams(window.location.search);
+      const key = params.get('tour');
+      const data = tourData[key];
+      const titleEl = document.getElementById('tourTitle');
+      const introEl = document.getElementById('tourIntro');
+      const descEl = document.getElementById('tourDesc');
+      const crumb = document.getElementById('crumbActive');
+      const metaEl = document.getElementById('tourMeta');
+  const planList = document.getElementById('planList');
+  const heroEl = document.querySelector('.tour-hero');
+      const regCountEl = document.getElementById('regCount');
+      const regTargetEl = document.getElementById('regTarget');
+      const daysLeftEl = document.getElementById('daysLeft');
+      const regProgress = document.getElementById('regProgress');
+      const regMessage = document.getElementById('regMessage');
+      const registerBtn = document.getElementById('registerBtn');
+
+      if(!data){
+        titleEl.textContent = 'Tour Not Found';
+        introEl.textContent = 'The tour you tried to view does not exist or has been removed.';
+        descEl.innerHTML = '<em>Please return to the main adventures page.</em>';
+        crumb.textContent = 'Not Found';
+        document.getElementById('registerBox').style.display='none';
+        return;
+      }
+
+      // Populate core
+      titleEl.textContent = data.title;
+      introEl.textContent = data.short;
+      descEl.textContent = data.desc;
+      crumb.textContent = data.title;
+
+      // Exploration intro text
+      const exploreIntro = document.getElementById('exploreIntro');
+      if(exploreIntro){
+        exploreIntro.textContent = 'Below is what we are going to do there:';
+      }
+
+      // Force Cox's Bazar image as background (requested) regardless of tour
+      if (heroEl) {
+        const forced = 'essentials/Coxs Bazar.jpg'.replace(/'/g,'%27');
+        heroEl.style.background = `linear-gradient(180deg,rgba(15,23,42,.55),rgba(30,58,138,.55)), url('${forced}') center/cover no-repeat`;
+        heroEl.style.minHeight = '60vh';
+      }
+
+      // Meta chips
+      metaEl.innerHTML = '';
+      const metaItems = [
+        ['DURATION', data.durationLabel],
+        ['DIFFICULTY', data.difficulty],
+        ['FOCUS', data.focus],
+        ['SEASON', data.season]
+      ];
+      metaItems.forEach((m,i)=>{
+        const chip=document.createElement('div');
+        chip.className='chip'+(i===0?' primary':'');
+        chip.innerHTML = `<span>${m[0]}</span> ${m[1]}`;
+        metaEl.appendChild(chip);
+      });
+
+      // Itinerary as list (day label removed per request)
+      data.itinerary.forEach(item=>{
+        const li=document.createElement('li');
+        li.className='reveal';
+        li.innerHTML = `<h3>${item.title}</h3><p>${item.text}</p>`;
+        planList.appendChild(li);
+      });
+
+      // Additional detailed activity list for Cox's Bazar (requested)
+  if(key === 'coxs-bazar') {
+        const activities = [
+          "Visit Himchari National Park – Hills, waterfalls, and stunning sea views.",
+          "Enjoy Inani Beach – Famous for clean blue water and coral stones.",
+          "Go to Saint Martin’s Island – A small coral paradise with crystal-clear water.",
+          "Experience Laboni Beach – Perfect for sunset watching.",
+            "Explore Moheshkhali Island – Hills, mangrove forests, and Adinath Temple.",
+          "Take a boat ride on the Bakkhali River – Peaceful and scenic.",
+          "Shop at Burmese Market – Unique handicrafts, clothes, and souvenirs.",
+          "Taste fresh seafood – Especially lobster, crab, and prawns.",
+          "Try beach sports – Football, volleyball, or horse riding.",
+          "Go parasailing or jet skiing – For an adventure thrill.",
+          "Visit Radiant Fish World – Bangladesh’s first fish aquarium and amusement center.",
+          "Enjoy sunrise from Kolatoli Beach – Early morning beauty.",
+          "Trek to Ramu Buddhist Temples – Rich cultural heritage and history."
+        ];
+        activities.forEach(act => {
+          const split = act.split(' – ');
+          const title = split[0];
+          const desc = split[1] ? split.slice(1).join(' – ') : '';
+          const li = document.createElement('li');
+          li.className = 'reveal';
+          li.innerHTML = `<h3>${title}</h3><p>${desc}</p>`;
+          planList.appendChild(li);
+        });
+      }
+
+      // Make sure reveal elements are shown (script.js not loaded on this page)
+      requestAnimationFrame(()=>{
+        document.querySelectorAll('.reveal').forEach(el=>{
+          el.classList.add('visible');
+        });
+      });
+
+  // (Local highlights section removed)
+
+      // Registration info simulation
+      const now = new Date();
+      const diffDays = Math.max(0, Math.ceil((data.startDate - now)/(1000*60*60*24)));
+      regCountEl.textContent = data.registered;
+      regTargetEl.textContent = data.target;
+      daysLeftEl.textContent = diffDays;
+      const pct = Math.min(100, Math.round((data.registered/data.target)*100));
+      requestAnimationFrame(()=> regProgress.style.width = pct + '%');
+      regMessage.textContent = pct >= 100 ? 'Registration full – waitlist only.' : `${pct}% of spots filled. ${data.target - data.registered} spots left.`;
+
+      registerBtn.addEventListener('click', ()=>{
+        if(regProgress.dataset.locked) return;
+        let current = parseInt(regCountEl.textContent,10);
+        if(current >= data.target){
+          regMessage.textContent = 'Already full. You are on the waitlist.';
+          regProgress.dataset.locked = '1';
+          return;
+        }
+        current += 1; data.registered = current; regCountEl.textContent = current;
+        const newPct = Math.min(100, Math.round((current/data.target)*100));
+        regProgress.style.width = newPct + '%';
+        regMessage.textContent = newPct >= 100 ? 'Registration full – waitlist only.' : `${newPct}% of spots filled. ${data.target - current} spots left.`;
+        if(newPct >= 100){ regProgress.dataset.locked='1'; registerBtn.disabled=true; registerBtn.textContent='Full'; }
+      });
+    })();
+  </script>
+</body>
+</html>
