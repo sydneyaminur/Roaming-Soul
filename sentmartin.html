@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tour Plan • Roaming Soul</title>
+  <title>Saint Martin's Coral Escape • Roaming Soul</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="tour-page" data-tour="coxs-bazar">
-  <!-- Lottie Loading Screen (same as index) -->
+<body class="tour-page" data-tour="saint-martins">
   <div id="appLoader" class="lottie-loader" role="status" aria-live="polite" aria-label="Loading site">
     <dotlottie-wc src="https://lottie.host/2d14eb0f-28b0-4d21-ac17-9a12f9404d3b/DEKcVcQZ2y.lottie" speed="1" autoplay loop></dotlottie-wc>
     <p class="loader-tip">Loading...</p>
-    <noscript><p class="loader-tip">Please enable JavaScript to use this site.</p></noscript>
+    <noscript><p class="loader-tip">Enable JavaScript.</p></noscript>
   </div>
   <header>
     <nav class="navbar white">
@@ -29,29 +28,28 @@
   <main style="padding-top:90px;">
     <section class="tour-hero">
       <div>
-        <h1 id="tourTitle">Loading Tour...</h1>
-        <p id="tourIntro">Bringing itinerary details. Please wait.</p>
+        <h1 id="tourTitle">Saint Martin's Island</h1>
+        <p id="tourIntro">Crystal water, coral ecology & starlit nights.</p>
       </div>
     </section>
     <div class="tour-container">
       <div class="tour-panel">
         <nav class="breadcrumbs" aria-label="Breadcrumb">
-          <a href="index.html">Home</a> › <a href="index.html#adventures">Recent Tour Planning</a> › <span id="crumbActive">Loading</span>
+          <a href="index.html">Home</a> › <a href="index.html#adventures">Recent Tour Planning</a> › <span>Saint Martin's</span>
         </nav>
-        <p id="tourDesc" class="dynamic-desc"></p>
+        <p id="tourDesc" class="dynamic-desc">An eco-conscious coral island exploration: sandbank walks, tidal pools, night sky sessions and marine life interpretation supporting responsible low-impact travel.</p>
         <div class="tour-meta" id="tourMeta"></div>
-  <h2 style="font-size:1.3rem;margin:0 0 .6rem;" id="exploreHeading">What We Are Going To Explore</h2>
-  <!-- Removed exploreIntro line per request -->
-  <ul class="plan-list" id="planList"></ul>
-  <div class="register-box" id="registerBox" aria-live="polite">
+        <h2 style="font-size:1.3rem;margin:0 0 .6rem;">What We Are Going To Explore</h2>
+        <ul class="plan-list" id="planList"></ul>
+        <div class="register-box" id="registerBox" aria-live="polite">
           <h2>Registration Status</h2>
           <div class="reg-metrics">
-            <div class="metric-box target" aria-label="Capacity participants"><h3>Capacity</h3><span class="value" id="regTarget">0</span></div>
-            <div class="metric-box registered" aria-label="Registered participants"><h3>Registered</h3><span class="value" id="regCount">0</span></div>
-            <div class="metric-box available" aria-label="Available spots"><h3>Available</h3><span class="value" id="regAvailable">0</span></div>
+            <div class="metric-box target" aria-label="Capacity participants"><h3>Capacity</h3><span class="value" id="regTarget">80</span></div>
+            <div class="metric-box registered" aria-label="Registered participants"><h3>Registered</h3><span class="value" id="regCount">12</span></div>
+            <div class="metric-box available" aria-label="Available spots"><h3>Available</h3><span class="value" id="regAvailable">68</span></div>
           </div>
           <div class="progress-wrap"><div class="progress-bar" id="regProgress"></div></div>
-          <p id="regMessage" style="font-size:.8rem; margin:.2rem 0 .9rem; letter-spacing:.3px; opacity:.9;"></p>
+          <p id="regMessage" style="font-size:.8rem; margin:.2rem 0 .9rem; letter-spacing:.3px; opacity:.9;">15% of spots filled. 68 spots left.</p>
           <button type="button" id="registerBtn">Join Now</button>
         </div>
         <a class="back-link" href="index.html#adventures">← Back to all tours</a>

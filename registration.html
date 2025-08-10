@@ -5,32 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Join Tour • Roaming Soul</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    body{background:#f1f5f9;font-family:system-ui,Arial,sans-serif;}
-    .join-wrapper{max-width:640px;margin:90px auto 60px;padding:2.2rem 2rem 2.4rem;background:#fff;border-radius:28px;box-shadow:0 18px 46px -18px rgba(0,0,0,.28),0 8px 24px -12px rgba(0,0,0,.18);}
-    h1{margin:0 0 1.2rem;font-size:1.85rem;color:#1e293b;letter-spacing:.5px;text-align:center;}
-    p.lead{margin:-.4rem 0 1.6rem;font-size:.95rem;color:#475569;text-align:center;}
-    form{display:flex;flex-direction:column;gap:1.1rem;}
-    label span{display:block;font-size:.75rem;font-weight:600;letter-spacing:.12em;color:#334155;margin-bottom:.4rem;}
-  input,textarea,select{width:100%;padding:.85rem 1rem;border:1px solid #cfd6dd;border-radius:14px;font:inherit;background:#f8fafc;transition:border-color .3s ease,background .3s ease,box-shadow .3s ease;}
-  input:focus,textarea:focus,select:focus{outline:none;border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.25);} 
-    .two{display:grid;grid-template-columns:1fr 1fr;gap:1rem;} 
-    @media(max-width:560px){.two{grid-template-columns:1fr;}}
-    .note{font-size:.7rem;color:#64748b;margin-top:-.6rem;letter-spacing:.4px;}
-    button[type=submit]{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;padding:.95rem 1.2rem;font-weight:600;font-size:.95rem;border-radius:14px;cursor:pointer;box-shadow:0 10px 22px -10px rgba(37,99,235,.7);transition:transform .3s ease,box-shadow .4s ease;} 
-    button[type=submit]:hover{transform:translateY(-3px);box-shadow:0 18px 34px -14px rgba(37,99,235,.65);} 
-    .back-link{display:inline-flex;align-items:center;gap:.4rem;margin-top:1.6rem;font-size:.8rem;text-decoration:none;color:#2563eb;font-weight:600;}
-    .success{display:none;padding:1rem 1.1rem;margin-top:1.2rem;border-radius:14px;background:#ecfdf5;color:#065f46;font-size:.85rem;font-weight:600;}
-  .field{position:relative;}
-  .error-msg{display:none;font-size:.65rem;font-weight:600;letter-spacing:.5px;color:#b91c1c;margin-top:.35rem;background:#fef2f2;padding:.4rem .55rem;border:1px solid #fecaca;border-radius:10px;}
-  .invalid input,.invalid select{border-color:#dc2626;background:#fef2f2;}
-  .invalid input:focus,.invalid select:focus{box-shadow:0 0 0 3px rgba(220,38,38,.25);}
-  /* (Gender radio style removed – reverted to select) */
-  .aria-status{position:absolute;left:-9999px;height:1px;width:1px;overflow:hidden;clip:rect(0 0 0 0);}
-  button[disabled]{opacity:.55;cursor:not-allowed;}
-  </style>
 </head>
-<body>
+<body class="registration-page">
   <!-- Lottie Loading Screen -->
   <div id="appLoader" class="lottie-loader" role="status" aria-live="polite" aria-label="Loading registration page">
     <dotlottie-wc src="https://lottie.host/2d14eb0f-28b0-4d21-ac17-9a12f9404d3b/DEKcVcQZ2y.lottie" speed="1" autoplay loop></dotlottie-wc>
@@ -80,116 +56,6 @@
   </div>
   <!-- Lottie web component -->
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
-  <script>
-    (function(){
-      // Loader enter / exit handling (keep element for reuse on navigation away)
-      const appLoader=document.getElementById('appLoader');
-      if(appLoader){
-        window.addEventListener('load', ()=>{
-          // hide after slight delay to allow animation display
-          setTimeout(()=> appLoader.classList.add('hide'), 450);
-          // DO NOT remove so we can reuse when leaving page
-        });
-        // safety auto-hide if load events slow
-        setTimeout(()=> appLoader.classList.add('hide'), 7000);
-      }
-      function showLoaderAndNavigate(url, delay=450){
-        if(appLoader){
-          appLoader.setAttribute('aria-label','Loading next page');
-          appLoader.classList.remove('hide');
-        }
-        setTimeout(()=>{ location.href=url; }, delay);
-      }
-      const params=new URLSearchParams(location.search); const tour=params.get('tour');
-      const heading=document.getElementById('joinHeading');
-      const lead=document.getElementById('joinLead');
-      if(tour){
-        heading.textContent='Join '+ formatTitle(tour) + ' Tour';
-        lead.textContent='Tell us how many people are joining the '+ formatTitle(tour) +' adventure.';
-        const backLink=document.getElementById('backLink');
-  if(tour==='sundarbans') backLink.href='shundarban.html';
-  else if(tour==='bandarban') backLink.href='bandarban.html';
-  else backLink.href='coxs-bazar.html?tour='+tour;
-      }
-      function formatTitle(k){ return k.replace(/-/g,' ').replace(/\b\w/g,ch=>ch.toUpperCase()); }
-      const form=document.getElementById('joinForm'); const success=document.getElementById('successMsg');
-      const liveErrors=document.getElementById('liveErrors');
-      const fields={
-    name:{el:document.getElementById('name'),rule(v){return v.trim().length>=3||'Name must be at least 3 characters';}},
-        email:{el:document.getElementById('email'),rule(v){return (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/).test(v.trim())||'Enter a valid email address';}},
-        phone:{el:document.getElementById('phone'),rule(v){return (/^\d{11}$/).test(v.trim())||'Phone must be exactly 11 digits';}},
-  party:{el:document.getElementById('party'),rule(v){if(v==="") return true; const n=Number(v); return (n>=0 && n<1001)||'Value must be 0 - 1000';}},
-  gender:{el:document.getElementById('gender'),rule(v){return v.trim()!==''||'Select a gender';}}
-      };
-      function showError(key,msg){
-        const wrapper=document.getElementById('field-'+key);
-        const box=wrapper.querySelector('.error-msg');
-        if(msg===true){ wrapper.classList.remove('invalid'); box.style.display='none'; box.textContent=''; return; }
-        wrapper.classList.add('invalid'); box.textContent=msg; box.style.display='block';
-      }
-      const touched={};
-      function validateField(key, force=false){
-        const {el,rule}=fields[key];
-        const res=rule(el.value);
-        if(touched[key] || force){
-          showError(key,res===true?true:res);
-        }
-        return res===true;
-      }
-      Object.keys(fields).forEach(k=>{
-        const el=fields[k].el;
-        el.addEventListener('input',()=>{ if(!touched[k]) touched[k]=true; validateField(k); updateSubmit(); });
-        el.addEventListener('blur',()=>{ if(el.value!=='' || k==='party') { touched[k]=true; validateField(k); updateSubmit(); } });
-      });
-      const submitBtn=form.querySelector('button[type=submit]');
-      function updateSubmit(){
-  const allValid=['name','email','phone','party','gender'].every(k=>fields[k].rule(fields[k].el.value)===true);
-        submitBtn.disabled=!allValid;
-      }
-      updateSubmit();
-      form.addEventListener('submit', e=>{
-        e.preventDefault();
-        let firstInvalid=null; const messages=[];
-        // Mark all as touched and validate showing errors now
-        Object.keys(fields).forEach(k=>{ touched[k]=true; if(!validateField(k,true) && !firstInvalid) firstInvalid=fields[k].el; });
-        if(firstInvalid){
-          messages.push('Please fix the highlighted fields.');
-          liveErrors.textContent=messages.join(' ');
-          firstInvalid.focus();
-          return;
-        }
-  const party=document.getElementById('party');
-  // party field = number of companions (not including the user)
-  let companions=parseInt(party.value,10);
-  if(isNaN(companions) || companions<0) companions=0;
-  if(companions>1000) companions=1000;
-  const count = companions + 1; // total participants including user
-        try {
-          const KEY='tourExtraRegistrations';
-          const store=JSON.parse(localStorage.getItem(KEY)||'{}');
-          store[tour||'unknown']=(store[tour||'unknown']||0)+count; // accumulate
-          localStorage.setItem(KEY, JSON.stringify(store));
-        }catch(err){ /* ignore storage errors */ }
-        success.style.display='block';
-        submitBtn.disabled=true;
-        // Brief success message then show loader and navigate
-        setTimeout(()=>{
-          let next;
-          if(tour==='sundarbans') next='shundarban.html?joined='+count;
-          else if(tour==='bandarban') next='bandarban.html?joined='+count;
-          else next='coxs-bazar.html?tour='+encodeURIComponent(tour||'coxs-bazar')+'&joined='+count;
-          showLoaderAndNavigate(next, 550);
-        }, 650);
-      });
-      // Back link intercept to show loader
-      const backLink=document.getElementById('backLink');
-      if(backLink){
-        backLink.addEventListener('click', e=>{
-          const href=backLink.getAttribute('href');
-          if(href && !href.startsWith('#')){ e.preventDefault(); showLoaderAndNavigate(href); }
-        });
-      }
-    })();
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>

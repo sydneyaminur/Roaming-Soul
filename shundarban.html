@@ -5,45 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Sundarbans Eco Voyage • Roaming Soul</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    body { background:#f5f7fa; }
-    .tour-hero { position:relative; min-height:60vh; display:grid; place-items:center; padding:4rem 1rem; background:linear-gradient(180deg,rgba(15,23,42,.55),rgba(30,58,138,.55)), url('essentials/Shundarban.jpg') center/cover no-repeat; color:#fff; text-align:center; overflow:hidden; }
-    #tourTitle, #tourIntro { color:#ffffff; }
-    .tour-hero h1 { font-size:clamp(2.2rem,6vw,3.3rem); letter-spacing:.5px; margin:0 0 .8rem; }
-    .tour-hero p { max-width:760px; margin:0 auto; font-size:clamp(1rem,2.4vw,1.2rem); line-height:1.5; }
-    .tour-container { max-width:1100px; margin:-3rem auto 4rem; padding:0 1.2rem; position:relative; }
-    .tour-panel { background:#fff; border-radius:22px; padding:2.2rem 2rem 2.6rem; box-shadow:0 14px 45px -14px rgba(0,0,0,.28),0 6px 18px -8px rgba(0,0,0,.18); }
-    .breadcrumbs { font-size:.78rem; text-transform:uppercase; letter-spacing:.12em; font-weight:600; margin-bottom:1.4rem; color:#475569; display:flex; gap:.5rem; flex-wrap:wrap; }
-    .breadcrumbs a { text-decoration:none; color:#2563eb; }
-    .tour-meta { display:flex; flex-wrap:wrap; gap:1.1rem; margin:1.4rem 0 2rem; }
-    .tour-meta .chip { background:#f1f5f9; border:1px solid #e2e8f0; padding:.55rem .9rem; border-radius:30px; font-size:.72rem; font-weight:600; letter-spacing:.5px; display:inline-flex; align-items:center; gap:.45rem; }
-    .tour-meta .chip.primary { background:linear-gradient(135deg,#2563eb,#1d4ed8); color:#fff; border:none; box-shadow:0 6px 16px -6px rgba(37,99,235,.55); }
-    .plan-list { list-style:none; margin:.5rem 0 1.6rem; padding:0; display:flex; flex-direction:column; gap:.7rem; }
-    .plan-list li { background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:.85rem 1rem .95rem; box-shadow:0 4px 10px -6px rgba(0,0,0,.12); }
-    .plan-list li h3 { margin:0 0 .25rem; font-size:.95rem; color:#1e293b; letter-spacing:.2px; }
-    .plan-list li p { margin:0; font-size:.78rem; line-height:1.45; color:#475569; }
-    .dynamic-desc { font-size:.95rem; line-height:1.6; color:#334155; margin:0 0 1.4rem; }
-    .register-box { background:linear-gradient(135deg,#1d4ed8,#2563eb); color:#fff; padding:1.5rem 1.4rem 1.6rem; border-radius:20px; position:relative; overflow:hidden; box-shadow:0 10px 28px -12px rgba(37,99,235,.6); }
-    .register-box h2 { margin:0 0 .6rem; font-size:1.4rem; }
-    .reg-metrics { display:flex; flex-wrap:wrap; gap:1rem; margin:.9rem 0 1.3rem; }
-    .metric-box { flex:0 0 140px; width:140px; height:140px; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.28); border-radius:16px; padding:.85rem; box-shadow:0 5px 12px -6px rgba(0,0,0,.35); position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
-    .metric-box:before { content:""; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.05)); mix-blend-mode:overlay; pointer-events:none; }
-    .metric-box h3 { margin:0 0 .45rem; font-size:.62rem; letter-spacing:.18em; font-weight:700; opacity:.85; text-transform:uppercase; }
-    .metric-box .value { font-size:1.6rem; font-weight:700; line-height:1; letter-spacing:.5px; }
-    .metric-box.target { background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.08)); }
-    .metric-box.registered { background:linear-gradient(135deg,rgba(255,255,255,.2),rgba(255,255,255,.1)); }
-    .metric-box.available { background:linear-gradient(135deg,rgba(34,197,94,.35),rgba(16,185,129,.25)); }
-    @media (max-width:620px){ .metric-box { flex:1 1 calc(50% - .5rem); width:auto; height:130px; } }
-    @media (max-width:480px){ .metric-box { flex:1 1 100%; width:100%; height:125px; } }
-    .progress-wrap { background:rgba(255,255,255,.25); height:10px; border-radius:6px; overflow:hidden; margin:.6rem 0 1rem; }
-    .progress-bar { height:100%; width:0; background:linear-gradient(90deg,#fff,#c3dafe); transition:width 1.2s cubic-bezier(.77,0,.18,1); }
-    .register-box button { background:#fff; color:#1d4ed8; border:none; padding:.85rem 1.1rem; border-radius:12px; font-weight:600; cursor:pointer; box-shadow:0 6px 18px -6px rgba(0,0,0,.25); font-size:.9rem; transition:transform .3s ease, box-shadow .4s ease; }
-    .register-box button:hover { transform:translateY(-3px); box-shadow:0 14px 32px -12px rgba(0,0,0,.35); }
-    .back-link { display:inline-flex; align-items:center; gap:.45rem; font-size:.8rem; text-decoration:none; background:#fff; padding:.6rem .9rem; border-radius:12px; border:1px solid #e2e8f0; margin-top:1.4rem; box-shadow:0 4px 8px -4px rgba(0,0,0,.18); }
-    .back-link:hover { background:#f1f5f9; }
-  </style>
 </head>
-<body>
+<body class="tour-page" data-tour="sundarbans">
   <!-- Loader -->
   <div id="appLoader" class="lottie-loader" role="status" aria-live="polite" aria-label="Loading site">
     <dotlottie-wc src="https://lottie.host/2d14eb0f-28b0-4d21-ac17-9a12f9404d3b/DEKcVcQZ2y.lottie" speed="1" autoplay loop></dotlottie-wc>
@@ -82,12 +45,12 @@
         <div class="register-box" id="registerBox" aria-live="polite">
           <h2>Registration Status</h2>
           <div class="reg-metrics">
-            <div class="metric-box target" aria-label="Capacity participants"><h3>Capacity</h3><span class="value" id="regTarget">12</span></div>
-            <div class="metric-box registered" aria-label="Registered participants"><h3>Registered</h3><span class="value" id="regCount">6</span></div>
-            <div class="metric-box available" aria-label="Available spots"><h3>Available</h3><span class="value" id="regAvailable">6</span></div>
+            <div class="metric-box target" aria-label="Capacity participants"><h3>Capacity</h3><span class="value" id="regTarget">80</span></div>
+            <div class="metric-box registered" aria-label="Registered participants"><h3>Registered</h3><span class="value" id="regCount">17</span></div>
+            <div class="metric-box available" aria-label="Available spots"><h3>Available</h3><span class="value" id="regAvailable">63</span></div>
           </div>
           <div class="progress-wrap"><div class="progress-bar" id="regProgress"></div></div>
-          <p id="regMessage" style="font-size:.8rem; margin:.2rem 0 .9rem; letter-spacing:.3px; opacity:.9;">50% of spots filled. 6 spots left.</p>
+          <p id="regMessage" style="font-size:.8rem; margin:.2rem 0 .9rem; letter-spacing:.3px; opacity:.9;">21% of spots filled. 63 spots left.</p>
           <button type="button" id="registerBtn">Join Now</button>
         </div>
         <a class="back-link" href="index.html#adventures">← Back to all tours</a>
@@ -98,58 +61,6 @@
     <p style="margin:0;">© 2025 Roaming Soul. All rights reserved.</p>
   </footer>
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
-  <script>
-    (function(){
-      const loader=document.getElementById('appLoader');
-      window.addEventListener('load',()=>{
-        setTimeout(()=>loader.classList.add('hide'),400);
-        setTimeout(()=>loader.remove(),1400);
-      });
-      setTimeout(()=>{ if(loader && !loader.classList.contains('hide')) { loader.classList.add('hide'); setTimeout(()=>loader.remove(),1000);} },7000);
-    })();
-  </script>
-  <script>
-    (function(){
-      // Static meta chips
-      const metaEl=document.getElementById('tourMeta');
-      const metaItems=[
-        ['DURATION','5 Days'],
-        ['FOCUS','Wildlife / Ecology'],
-        ['VISITING DATE','17th October 2025']
-      ];
-      metaItems.forEach((m,i)=>{ const chip=document.createElement('div'); chip.className='chip'+(i===0?' primary':''); chip.innerHTML=`<span>${m[0]}</span> ${m[1]}`; metaEl.appendChild(chip); });
-      // Itinerary
-      const itinerary=[
-        { title:'Khulna Boarding', text:'Night launch boarding, briefing & orientation.' },
-        { title:'Canal Cruise', text:'Early canal ride, mangrove interpretation, village interaction.' },
-        { title:'Tiger Watch Zones', text:'Watch towers, track interpretation, eco education session.' },
-        { title:'Bird & Dolphin Sight', text:'Creek exploration, dolphin spotting stretch, community crafts.' },
-        { title:'Return & Debrief', text:'Morning short cruise, return to Khulna, bus back.' }
-      ];
-      const list=document.getElementById('planList');
-      itinerary.forEach(item=>{ const li=document.createElement('li'); li.className='reveal'; li.innerHTML=`<h3>${item.title}</h3><p>${item.text}</p>`; list.appendChild(li); });
-      requestAnimationFrame(()=> document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible')));
-
-      // Registration logic (includes localStorage additions from registration form)
-      const target=12; let registered=6;
-      try { const extra=JSON.parse(localStorage.getItem('tourExtraRegistrations')||'{}'); if(extra['sundarbans']) registered+=extra['sundarbans']; } catch(e){}
-      const regCount=document.getElementById('regCount');
-      const regAvail=document.getElementById('regAvailable');
-      const regProgress=document.getElementById('regProgress');
-      const regMessage=document.getElementById('regMessage');
-      function updateReg(){
-        regCount.textContent=registered;
-        const remaining=Math.max(0,target-registered);
-        regAvail.textContent=remaining;
-        const pct=Math.min(100,Math.round((registered/target)*100));
-        regProgress.style.width=pct+'%';
-        regMessage.textContent=pct>=100? 'Registration full – waitlist only.' : `${pct}% of spots filled. ${remaining} spots left.`;
-      }
-      updateReg();
-      document.getElementById('registerBtn').addEventListener('click',()=>{
-        location.href='registration.html?tour=sundarbans';
-      });
-    })();
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
