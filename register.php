@@ -112,18 +112,15 @@
 		Your browser does not support the video tag.
 	</video>
 	<div style="position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:-1;"></div>
-	<nav class="navbar" style="z-index:1002;">
-		<div class="logo">
-			<img src="essentials/Logo.png" alt="Roaming Soul Logo">
+	<nav class="navbar">
+		<a href="index.php" class="logo" aria-label="Roaming Soul Home" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:.4rem;">
+			<img src="essentials/Logo.png" alt="Roaming Soul Logo" />
 			<span class="logo-text">Roaming Soul</span>
-		</div>
+		</a>
 		<ul class="nav-menu">
-			<li><a href="index.php" class="nav-link">Home</a></li>
-			<li><a href="#about" class="nav-link">About Us</a></li>
-			<li><a href="#adventures" class="nav-link">Adventures</a></li>
-			<li><a href="#team" class="nav-link">Team</a></li>
-			<li><a href="#contact" class="nav-link">Contact Us</a></li>
-			<li><a href="login.php" class="nav-link login-btn">Login</a></li>
+			<li><a href="index.php#home" class="nav-link">Home</a></li>
+			<li><a href="index.php#adventures" class="nav-link">Adventures</a></li>
+			<li><a href="index.php#contact" class="nav-link">Contact</a></li>
 		</ul>
 	</nav>
 	<div style="width:100%; display:flex; flex-direction:column; align-items:center;">

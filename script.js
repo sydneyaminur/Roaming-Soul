@@ -114,9 +114,10 @@
   const navbar = doc.querySelector('.navbar');
   const aboutSection = doc.getElementById('about');
   if (navbar && aboutSection) {
-    const threshold = () => aboutSection.offsetTop - 20; // trigger close to section start
+    const threshold = () => aboutSection.offsetTop - 20;
     const onScrollNav = () => {
-      if (window.scrollY >= threshold()) navbar.classList.add('white'); else navbar.classList.remove('white');
+      if (window.scrollY >= threshold()) navbar.classList.add('white');
+      else navbar.classList.remove('white');
     };
     window.addEventListener('scroll', onScrollNav, { passive: true });
     window.addEventListener('resize', onScrollNav);

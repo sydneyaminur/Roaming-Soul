@@ -25,8 +25,10 @@
 	<header>
 		<nav class="navbar">
 			<div class="logo">
-				<img src="essentials/Logo.png" alt="Roaming Soul Logo">
-				<span class="logo-text">Roaming Soul</span>
+				<a href="index.php" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;">
+					<img src="essentials/Logo.png" alt="Roaming Soul Logo">
+					<span class="logo-text">Roaming Soul</span>
+				</a>
 			</div>
 			<ul class="nav-menu">
 				<li><a href="#home" class="nav-link">Home</a></li>
@@ -214,6 +216,6 @@
 	<button id="backToTop" aria-label="Back to top" title="Back to top">▲</button>
 	<!-- Login modal removed. Login button now redirects to login.php -->
 	<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
-	<script src="script.js" defer></script>
+	<script src="script.js"></script>
 </body>
 </html>

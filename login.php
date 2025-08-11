@@ -134,12 +134,17 @@ if (isset($_SESSION['username'])) {
 		   Your browser does not support the video tag.
 	   </video>
 	   <div class="bg-overlay" style="position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:-1;"></div>
-	   <nav class="navbar" style="z-index:1002;">
-		   <div class="logo">
-			   <img src="essentials/Logo.png" alt="Roaming Soul Logo">
-			   <span>Roaming Soul</span>
-		   </div>
-	   </nav>
+	   <nav class="navbar">
+  <a href="index.php" class="logo" aria-label="Roaming Soul Home" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:.4rem;">
+    <img src="essentials/Logo.png" alt="Roaming Soul Logo" />
+    <span class="logo-text">Roaming Soul</span>
+  </a>
+  <ul class="nav-menu">
+    <li><a href="index.php#home" class="nav-link">Home</a></li>
+    <li><a href="index.php#adventures" class="nav-link">Adventures</a></li>
+    <li><a href="index.php#contact" class="nav-link">Contact</a></li>
+  </ul>
+</nav>
 	   <div style="position:fixed; top:0; left:0; width:100vw; height:100vh; display:flex; align-items:center; justify-content:center; z-index:1001; pointer-events:none;">
 		   <div class="card" style="z-index:1001; pointer-events:auto;">
 			   <div style="width:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding-top:2.5rem; padding-bottom:1.2rem;">
