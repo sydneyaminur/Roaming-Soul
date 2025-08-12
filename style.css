@@ -230,9 +230,12 @@ footer { flex-shrink:0; }
     font-weight: bold;
     margin-bottom: 1rem;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    animation: fadeInUp 2s ease-out, glow 3s ease-in-out infinite alternate;
-    opacity: 0;
-    animation-fill-mode: forwards;
+    opacity: 0; /* start hidden; will animate via JS-applied class */
+}
+
+/* Applied by JS after loader hides */
+.hero-title.animate-zoom {
+    animation: zoomIn 0.9s ease-out forwards, glow 3s ease-in-out 1s infinite alternate;
 }
 
 .hero-subtitle {
@@ -240,9 +243,15 @@ footer { flex-shrink:0; }
     font-weight: 300;
     font-style: italic;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-    animation: fadeInUp 2s ease-out 0.5s, slideIn 1.5s ease-out 0.5s;
-    opacity: 0;
-    animation-fill-mode: forwards;
+    opacity: 0; /* will be shown when typing starts */
+    display: inline-block; /* needed for caret border */
+}
+
+/* Typing state: blinking caret; text content is typed via JS */
+.hero-subtitle.typing {
+    opacity: 1;
+    border-right: 2px solid rgba(255,255,255,0.85);
+    animation: caretBlink .9s steps(1, end) infinite;
 }
 
 @keyframes fadeInUp {
@@ -275,6 +284,16 @@ footer { flex-shrink:0; }
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 255, 255, 0.6), 0 0 30px rgba(74, 144, 226, 0.4);
     }
 }
+
+/* New zoom-in keyframe for title */
+@keyframes zoomIn {
+    0% { opacity: 0; transform: scale(0.88) translateZ(0); filter: blur(2px); }
+    60% { opacity: 1; transform: scale(1.02); filter: blur(0); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* Caret blink for typing effect */
+@keyframes caretBlink { 0%, 49% { border-right-color: rgba(255,255,255,0.85); } 50%, 100% { border-right-color: transparent; } }
 
 .about-section {
     padding: 5rem 0;
@@ -919,15 +938,27 @@ form, .content {
     border: none;
     border-radius: 5px;
 }
+/* Global legacy error box (kept for older pages). We will neutralize it on the login page. */
 .error {
-    width: 92%; 
-    margin: 0px auto; 
-    padding: 10px; 
-    border: 1px solid #a94442; 
-    color: #a94442; 
-    background: #f2dede; 
-    border-radius: 5px; 
+    width: 92%;
+    margin: 0px auto;
+    padding: 10px;
+    border: 1px solid #a94442;
+    color: #a94442;
+    background: #f2dede;
+    border-radius: 5px;
     text-align: left;
+}
+/* Login page: refine error box to match card and avoid layout shift */
+body.login-page .error {
+    width: 100%;
+    margin: 0 0 12px 0;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border-color: #fecaca;
+    background: #fef2f2;
+    color: #b91c1c;
+    box-sizing: border-box;
 }
 .success {
     color: #3c763d; 

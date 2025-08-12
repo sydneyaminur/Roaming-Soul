@@ -104,10 +104,43 @@
   if (lottieLoader) {
     window.addEventListener('load', () => {
       setTimeout(()=> { lottieLoader.classList.add('hide'); }, 400); // small delay for polish
-      setTimeout(()=> { lottieLoader.remove(); }, 1400);
+      setTimeout(()=> { lottieLoader.remove(); startHeroAnimations(); }, 1400);
     });
     // Fallback auto-hide after 7s if load event delayed
-    setTimeout(()=> { if(lottieLoader && !lottieLoader.classList.contains('hide')) { lottieLoader.classList.add('hide'); setTimeout(()=> lottieLoader.remove(), 1000); } }, 7000);
+    setTimeout(()=> { if(lottieLoader && !lottieLoader.classList.contains('hide')) { lottieLoader.classList.add('hide'); setTimeout(()=> { lottieLoader.remove(); startHeroAnimations(); }, 1000); } }, 7000);
+  }
+
+  /* ===== Hero Title Zoom + Subtitle Typing ===== */
+  function startHeroAnimations(){
+    const titleEl = doc.querySelector('.hero-title');
+    const subEl = doc.querySelector('.hero-subtitle');
+    if(titleEl){
+      // ensure starting state
+      titleEl.classList.remove('animate-zoom');
+      void titleEl.offsetWidth; // reflow for restart safety
+      titleEl.classList.add('animate-zoom');
+    }
+    if(subEl){
+      const fullText = subEl.getAttribute('data-fulltext') || subEl.textContent.trim();
+      typeText(subEl, fullText, 38, 350); // speed, start delay
+    }
+  }
+
+  function typeText(el, text, speed=40, startDelay=250){
+    el.textContent = '';
+    el.classList.add('typing');
+    let i = 0;
+    const step = () => {
+      if(i <= text.length){
+        el.textContent = text.slice(0, i);
+        i++;
+        setTimeout(step, speed);
+      } else {
+        // keep caret for a moment then remove
+        setTimeout(()=> el.classList.remove('typing'), 1200);
+      }
+    };
+    setTimeout(step, startDelay);
   }
 
   /* ===== Navbar style change on About section ===== */

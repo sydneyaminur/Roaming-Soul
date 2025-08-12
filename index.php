@@ -211,6 +211,7 @@
 	<footer>
 		<div class="container">
 			<p>&copy; 2025 Roaming Soul. All rights reserved.</p>
+			<p>Thank You for visiting the site. it was a pleasure having you here.</p>
 		</div>
 	</footer>
 	<button id="backToTop" aria-label="Back to top" title="Back to top">▲</button>
