@@ -109,6 +109,14 @@
     // Fallback auto-hide after 7s if load event delayed
     setTimeout(()=> { if(lottieLoader && !lottieLoader.classList.contains('hide')) { lottieLoader.classList.add('hide'); setTimeout(()=> { lottieLoader.remove(); startHeroAnimations(); }, 1000); } }, 7000);
   }
+  else {
+    // If there is no loader overlay, start animations when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', startHeroAnimations);
+    } else {
+      startHeroAnimations();
+    }
+  }
 
   /* ===== Hero Title Zoom + Subtitle Typing ===== */
   function startHeroAnimations(){
@@ -121,27 +129,19 @@
       titleEl.classList.add('animate-zoom');
     }
     if(subEl){
+      // Disable typing: ensure subtitle is visible and static
       const fullText = subEl.getAttribute('data-fulltext') || subEl.textContent.trim();
-      typeText(subEl, fullText, 38, 350); // speed, start delay
+      subEl.textContent = fullText;
+      subEl.classList.remove('typing','done');
+      subEl.style.opacity='1';
+      subEl.style.visibility='visible';
+      subEl.style.animation='none';
+      subEl.style.borderRight='none';
     }
   }
 
-  function typeText(el, text, speed=40, startDelay=250){
-    el.textContent = '';
-    el.classList.add('typing');
-    let i = 0;
-    const step = () => {
-      if(i <= text.length){
-        el.textContent = text.slice(0, i);
-        i++;
-        setTimeout(step, speed);
-      } else {
-        // keep caret for a moment then remove
-        setTimeout(()=> el.classList.remove('typing'), 1200);
-      }
-    };
-    setTimeout(step, startDelay);
-  }
+  // Typing disabled: leaving function stub in case re-enabled later
+  function typeText(){ /* disabled */ }
 
   /* ===== Navbar style change on About section ===== */
   const navbar = doc.querySelector('.navbar');

@@ -243,8 +243,15 @@ footer { flex-shrink:0; }
     font-weight: 300;
     font-style: italic;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-    opacity: 0; /* will be shown when typing starts */
-    display: inline-block; /* needed for caret border */
+    opacity: 1; /* visible by default: no typing animation */
+}
+/* Hard-disable any leftover typing states */
+.hero-subtitle,
+.hero-subtitle.typing,
+.hero-subtitle.done {
+    opacity: 1 !important;
+    border-right: none !important;
+    animation: none !important;
 }
 
 /* Typing state: blinking caret; text content is typed via JS */
@@ -252,6 +259,13 @@ footer { flex-shrink:0; }
     opacity: 1;
     border-right: 2px solid rgba(255,255,255,0.85);
     animation: caretBlink .9s steps(1, end) infinite;
+}
+
+/* After typing finishes, keep the text visible */
+.hero-subtitle.done {
+    opacity: 1;
+    border-right: none;
+    animation: none !important;
 }
 
 @keyframes fadeInUp {

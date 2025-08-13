@@ -56,7 +56,7 @@
 				</video>
 				<div class="hero-overlay">
 					<h1 class="hero-title">Roaming Soul</h1>
-					<p class="hero-subtitle">Journey Beyond Maps, Discover the Heart of Every Place</p>
+					<p class="hero-subtitle" data-fulltext="Journey Beyond Maps, Discover the Heart of Every Place" style="opacity:1;animation:none;border-right:0;visibility:visible;">Journey Beyond Maps, Discover the Heart of Every Place</p>
 				</div>
 			</div>
 		</section>

@@ -10,24 +10,25 @@
 		body.register-bg {
 			min-height: 100vh;
 			display: flex;
-			align-items: flex-start;
+			align-items: center; /* center like login */
 			justify-content: center;
 			font-family: 'Arial', sans-serif;
 			position: relative;
-			overflow: hidden;
-			padding-top: 60px;
+			overflow-y: auto; /* allow page scroll */
+			padding: 0; /* wrapper offsets navbar */
 		}
+	.register-wrap { min-height:100vh; width:100%; display:flex; align-items:center; justify-content:center; padding: 96px 16px 24px; position:relative; z-index:1001; }
 		.register-card {
 			background: #fff;
 			border-radius: 18px;
 			box-shadow: 0 12px 32px -8px rgba(37,99,235,.18);
-			padding: 2.2rem 1.7rem 1.7rem;
+			padding: 2rem 1.5rem 1.5rem;
 			max-width: 520px;
 			width: 100%;
 			text-align: center;
 			position: relative;
 			z-index: 1001;
-			margin-top: 30px;
+			margin: 0 auto;
 		}
 		.register-logo {
 			width: 70px;
@@ -101,12 +102,25 @@
 			text-decoration: none;
 			margin-left: .3rem;
 		}
-		.error {
-			margin-bottom: 1.1rem;
+		.error { margin-bottom: 1.1rem; }
+		/* Remove legacy global form border/background on this page */
+		body.register-page form { border:none !important; background:transparent !important; margin:0 !important; padding:0 !important; border-radius:0 !important; box-shadow:none !important; }
+		/* Responsive */
+		/* Short screens: top align and tighter spacing */
+		@media (max-height: 740px){
+			.register-wrap { align-items: flex-start; padding-top: 84px; }
+			.register-card { padding: 1.6rem 1.2rem 1.2rem; }
+			.register-form .input-group { margin-bottom: .9rem; }
+		}
+		@media (max-width: 480px){
+			.register-card { max-width: 360px; border-radius: 14px; padding: 1.6rem 1.2rem 1.2rem; }
+			.register-title { font-size: 1.7rem; }
+			.register-logo { width: 64px; height: 64px; }
+			.register-form .input-group { margin-bottom: 1rem; }
 		}
 	</style>
 </head>
-<body class="register-bg">
+<body class="register-bg register-page">
 	<video autoplay muted loop playsinline style="position:fixed; inset:0; width:100vw; height:100vh; object-fit:cover; z-index:-2;">
 		<source src="essentials/background.mp4" type="video/mp4">
 		Your browser does not support the video tag.
@@ -123,7 +137,7 @@
 			<li><a href="index.php#contact" class="nav-link">Contact</a></li>
 		</ul>
 	</nav>
-	<div style="width:100%; display:flex; flex-direction:column; align-items:center;">
+	<div class="register-wrap">
 		<div class="register-card">
 		<img src="essentials/Logo.png" alt="Roaming Soul Logo" class="register-logo">
 		<div class="register-title">Create Account</div>
@@ -160,8 +174,6 @@
 			</div>
 		</form>
 		</div>
-	</div>
-		</form>
 	</div>
 </body>
 </html>
