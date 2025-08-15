@@ -154,6 +154,9 @@ if (isset($_SESSION['username'])) {
 				margin-bottom: 1.1rem;
 			}
 			/* Responsive tweaks */
+			/* Style field errors under inputs in red */
+			.login-form .field-error { display:block; color:#b91c1c; font-size:.9rem; margin-top:.4rem; line-height:1.25; }
+			.login-card .error { display:none !important; }
 			@media (max-width: 480px) {
 				.login-wrap { padding: 86px 14px 20px; }
 				.login-card { max-width: 360px; border-radius: 14px; padding: 1.6rem 1.2rem 1.2rem; }
@@ -165,6 +168,7 @@ if (isset($_SESSION['username'])) {
 </head>
 
 <body class="login-bg login-page" style="position:relative; min-height:100vh; overflow:hidden;">
+		<script>window.__serverErrors = <?php echo json_encode($fieldErrors ?? [], JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT); ?>;</script>
 	   <video autoplay muted loop playsinline class="bg-video" style="position:fixed; inset:0; width:100vw; height:100vh; object-fit:cover; z-index:-2;">
 		   <source src="essentials/background.mp4" type="video/mp4">
 		   Your browser does not support the video tag.
@@ -187,20 +191,81 @@ if (isset($_SESSION['username'])) {
 					   <img src="essentials/Logo.png" alt="Roaming Soul Logo" class="login-logo appear" style="animation-delay:.05s;">
 					   <h2 class="login-title appear" style="margin-bottom:0; animation-delay:.35s;">User Login</h2>
 				   </div>
-				   <form class="login-form" method="post" action="login.php">
-					   <?php include('errors.php'); ?>
-					   <div class="input-group appear" style="animation-delay:.7s;">
-						   <label for="username">Username</label>
-						   <input type="text" id="username" name="username" required placeholder="Enter your username">
-					   </div>
-					   <div class="input-group appear" style="animation-delay:.85s;">
-						   <label for="password">Password</label>
-						   <input type="password" id="password" name="password" required placeholder="Enter your password">
-					   </div>
+									 <form class="login-form" method="post" action="login.php" novalidate>
+											 <div class="input-group appear" style="animation-delay:.7s;">
+													 <label for="username">Username</label>
+													 <input type="text" id="username" name="username" required placeholder="Enter your username" value="<?php echo htmlspecialchars($username ?? '', ENT_QUOTES); ?>">
+													 <?php if (!empty($fieldErrors['username'])): ?>
+														 <div class="field-error" aria-live="polite"><?php echo htmlspecialchars(implode("\n", $fieldErrors['username'])); ?></div>
+													 <?php else: ?>
+														 <div class="field-error" aria-live="polite"></div>
+													 <?php endif; ?>
+											 </div>
+											 <div class="input-group appear" style="animation-delay:.85s;">
+													 <label for="password">Password</label>
+													 <input type="password" id="password" name="password" required placeholder="Enter your password">
+													 <?php if (!empty($fieldErrors['password'])): ?>
+														 <div class="field-error" aria-live="polite"><?php echo htmlspecialchars(implode("\n", $fieldErrors['password'])); ?></div>
+													 <?php else: ?>
+														 <div class="field-error" aria-live="polite"></div>
+													 <?php endif; ?>
+											 </div>
 					   <button type="submit" class="btn appear" style="animation-delay:1s;" name="login_user">Login</button>
 					   <a href="register.php" class="btn-secondary appear" style="margin-top:.9rem; animation-delay:1.15s;">Sign up</a>
 				   </form>
 			   </div>
 		   </div>
+	<script>
+// Minimal client-side inline validation for login
+(function(){
+	const form = document.querySelector('.login-form');
+	if(!form) return;
+			const showToast = ()=>{}; // disabled (using under-field errors instead)
+	const u = form.querySelector('#username');
+	const p = form.querySelector('#password');
+	const setErr = (input, msg) => {
+		const box = input.closest('.input-group').querySelector('.field-error');
+		if (msg) {
+			box.textContent = msg;
+			input.classList.add('input-error');
+		} else {
+			box.textContent = '';
+			input.classList.remove('input-error');
+		}
+	};
+	const validateU = () => {
+		const v = (u.value || '').trim();
+		if (!v) return setErr(u, 'Username is required');
+		setErr(u, '');
+	};
+	const validateP = () => {
+		const v = p.value || '';
+		if (!v) return setErr(p, 'Password is required');
+		setErr(p, '');
+	};
+	u.addEventListener('blur', validateU);
+	p.addEventListener('blur', validateP);
+			// no blur toasts; show under-field errors only
+	// Live validation while typing
+	u.addEventListener('input', validateU);
+	p.addEventListener('input', validateP);
+	form.addEventListener('submit', (e) => {
+		validateU();
+		validateP();
+		if (form.querySelector('.input-error')) {
+				e.preventDefault();
+				// Aggregate visible inline errors into a single toast message
+				const msgs = Array.from(form.querySelectorAll('.field-error'))
+					.map(n => (n.textContent || '').trim())
+					.filter(Boolean);
+						// rely on under-field errors only
+		}
+	});
+		// If server-side errors are present under fields, show a toast on page load
+		window.addEventListener('load', () => {
+					// no toasts on load; under-field errors already present
+		});
+})();
+	</script>
 </body>
 </html>
