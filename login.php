@@ -1,8 +1,18 @@
 <?php 
 include('server.php'); 
+// Flash message support (e.g., from join.php)
+$flash = '';
+if (!empty($_SESSION['flash_error'])) { $flash = $_SESSION['flash_error']; unset($_SESSION['flash_error']); }
+// Capture return parameter from GET or POST, keep only local relative paths
+$returnParam = '';
+if (!empty($_GET['return'])) { $returnParam = $_GET['return']; }
+elseif (!empty($_POST['return'])) { $returnParam = $_POST['return']; }
+if (!empty($returnParam) && preg_match('/^(?:[a-z]+:)?\/\//i', $returnParam)) { $returnParam = ''; }
+// If already logged in, send to return target if present and safe
 if (isset($_SESSION['username'])) {
-		header('location: index.php');
-		exit();
+	if (!empty($returnParam)) { header('location: ' . $returnParam); }
+	else { header('location: index.php'); }
+	exit();
 }
 ?>
 <!DOCTYPE html>
@@ -157,6 +167,7 @@ if (isset($_SESSION['username'])) {
 			/* Style field errors under inputs in red */
 			.login-form .field-error { display:block; color:#b91c1c; font-size:.9rem; margin-top:.4rem; line-height:1.25; }
 			.login-card .error { display:none !important; }
+			.flash { margin: 0 0 12px 0; padding: 10px 12px; border-radius: 10px; background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; font-size: .95rem; text-align:left; }
 			@media (max-width: 480px) {
 				.login-wrap { padding: 86px 14px 20px; }
 				.login-card { max-width: 360px; border-radius: 14px; padding: 1.6rem 1.2rem 1.2rem; }
@@ -170,8 +181,8 @@ if (isset($_SESSION['username'])) {
 <body class="login-bg login-page" style="position:relative; min-height:100vh; overflow:hidden;">
 		<script>window.__serverErrors = <?php echo json_encode($fieldErrors ?? [], JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT); ?>;</script>
 	   <video autoplay muted loop playsinline class="bg-video" style="position:fixed; inset:0; width:100vw; height:100vh; object-fit:cover; z-index:-2;">
-		   <source src="essentials/background.mp4" type="video/mp4">
-		   Your browser does not support the video tag.
+	 	   <source src="essentials/background.mp4" type="video/mp4">
+	 	   Your browser does not support the video tag.
 	   </video>
 	   <div class="bg-overlay" style="position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:-1;"></div>
 	   <nav class="navbar">
@@ -191,7 +202,13 @@ if (isset($_SESSION['username'])) {
 					   <img src="essentials/Logo.png" alt="Roaming Soul Logo" class="login-logo appear" style="animation-delay:.05s;">
 					   <h2 class="login-title appear" style="margin-bottom:0; animation-delay:.35s;">User Login</h2>
 				   </div>
-									 <form class="login-form" method="post" action="login.php" novalidate>
+																		<form class="login-form" method="post" action="login.php" novalidate>
+																			<?php if (!empty($flash)): ?>
+																				<div class="flash" role="alert" aria-live="polite"><?php echo htmlspecialchars($flash); ?></div>
+																			<?php endif; ?>
+																													<?php if (!empty($returnParam)): ?>
+																														<input type="hidden" name="return" value="<?php echo htmlspecialchars($returnParam); ?>">
+																			<?php endif; ?>
 											 <div class="input-group appear" style="animation-delay:.7s;">
 													 <label for="username">Username</label>
 													 <input type="text" id="username" name="username" required placeholder="Enter your username" value="<?php echo htmlspecialchars($username ?? '', ENT_QUOTES); ?>">

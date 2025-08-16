@@ -92,6 +92,16 @@ if (isset($_POST['reg_user'])) {
 if (isset($_POST['login_user'])) {
   $username = trim(mysqli_real_escape_string($db, $_POST['username']));
   $password = $_POST['password'] ?? '';
+  // Capture optional return target from form/query
+  $returnTarget = '';
+  if (!empty($_POST['return'])) { $returnTarget = $_POST['return']; }
+  else if (!empty($_GET['return'])) { $returnTarget = $_GET['return']; }
+  // Allow only local relative targets (avoid open redirect)
+  if (!empty($returnTarget)) {
+    if (preg_match('/^(?:[a-z]+:)?\/\//i', $returnTarget)) { // starts with protocol// or //
+      $returnTarget = '';
+    }
+  }
 
   if (empty($username)) {
   	array_push($errors, "Username is required");
@@ -120,7 +130,11 @@ if (isset($_POST['login_user'])) {
       if ($ok) {
         $_SESSION['username'] = $username;
         $_SESSION['success'] = "You are now logged in";
-        header('location: index.php');
+        if (!empty($returnTarget)) {
+          header('location: ' . $returnTarget);
+        } else {
+          header('location: index.php');
+        }
         exit();
       } else {
         array_push($errors, "Wrong username/password combination");

@@ -264,8 +264,8 @@
       function updateReg(){
         if(!regCount) return; regCount.textContent = registered; const remaining = Math.max(0,target-registered); if(regAvail) regAvail.textContent = remaining; if(regTargetEl) regTargetEl.textContent = target; const pct = Math.min(100, Math.round((registered/target)*100)); if(regProgress) regProgress.style.width = pct+'%'; if(regMessage) regMessage.textContent = pct>=100? 'Registration full – waitlist only.' : `${pct}% of spots filled. ${remaining} spots left.`; }
       updateReg();
-      const regBtn = doc.getElementById('registerBtn');
-      if (regBtn) regBtn.addEventListener('click', ()=> { location.href = `registration.html?tour=${tourKey}`; });
+  const regBtn = doc.getElementById('registerBtn');
+  if (regBtn) regBtn.addEventListener('click', ()=> { location.href = `join.php?tour=${tourKey}`; });
     }
   }
 
